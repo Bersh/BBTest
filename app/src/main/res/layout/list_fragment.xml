@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".list.ListFragment">
+    tools:context=".list.CityListFragment">
 
     <EditText
         android:id="@+id/edit_search"
@@ -15,6 +15,7 @@
         android:inputType="text" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

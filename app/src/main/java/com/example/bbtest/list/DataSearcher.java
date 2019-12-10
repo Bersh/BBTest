@@ -3,14 +3,18 @@ package com.example.bbtest.list;
 import com.example.bbtest.model.City;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class DataSearcher {
-    private Map<String, List<City>> data;
+    private Map<String, List<City>> data = new HashMap<>();
 
     public DataSearcher(List<City> cities) {
+        List<City> allList = new ArrayList<>();
+        data.put("", allList);
         for (City city : cities) {
+            allList.add(city);
             String name = city.getName().toLowerCase();
             StringBuilder sb = new StringBuilder();
             for (Character c : name.toCharArray()) {
