@@ -3,9 +3,9 @@ package com.example.bbtest.about;
 import android.content.Context;
 import android.os.Handler;
 
-import androidx.annotation.NonNull;
-
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by Backbase R&D B.V on 28/06/2018.
@@ -16,7 +16,7 @@ public class AboutPresenterImpl implements About.Presenter {
     private final WeakReference<About.View> aboutView;
     private final AboutModelImpl aboutModel;
 
-    public AboutPresenterImpl(About.View view, @NonNull Context context){
+    public AboutPresenterImpl(About.View view, @NonNull Context context) {
         this.aboutView = new WeakReference<>(view);
         this.aboutModel = new AboutModelImpl(this, context);
     }
@@ -39,7 +39,7 @@ public class AboutPresenterImpl implements About.Presenter {
     public void onSuccess(AboutInfo aboutInfo) {
         About.View aboutViewImpl = aboutView.get();
 
-        if(aboutViewImpl != null){
+        if (aboutViewImpl != null) {
             aboutViewImpl.hideProgress();
             aboutViewImpl.setCompanyName(aboutInfo.getCompanyName());
             aboutViewImpl.setCompanyAddress(aboutInfo.getCompanyAddress());
@@ -53,7 +53,7 @@ public class AboutPresenterImpl implements About.Presenter {
     @Override
     public void onFail() {
         About.View aboutViewImpl = aboutView.get();
-        if (aboutViewImpl != null){
+        if (aboutViewImpl != null) {
             aboutViewImpl.hideProgress();
             aboutViewImpl.showError();
         }

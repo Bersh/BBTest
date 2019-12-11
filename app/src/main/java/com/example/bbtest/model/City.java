@@ -32,4 +32,8 @@ public class City {
     public LatLng getCoord() {
         return coord;
     }
+
+    public class Coordinates {
+
+    }
 }

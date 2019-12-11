@@ -1,20 +1,62 @@
 package com.example.bbtest.list;
 
-import com.example.bbtest.model.City;
+import android.content.res.AssetManager;
 
+import com.example.bbtest.LatLngDeserializer;
+import com.example.bbtest.model.City;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class CityListViewModel extends ViewModel {
-    private DataSearcher dataSearcher;
     MutableLiveData<List<City>> cities = new MutableLiveData<>();
+    MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private DataSearcher dataSearcher;
 
-    public CityListViewModel(@NonNull List<City> citiesList) {
-        dataSearcher = new DataSearcher(citiesList);
-        cities.setValue(dataSearcher.findCities(""));
+    public CityListViewModel(@Nullable final AssetManager assetsManager) {
+        isLoading.setValue(true);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dataSearcher = new DataSearcher(readCitiesData(assetsManager));
+                cities.postValue(dataSearcher.findCities(""));
+                isLoading.postValue(false);
+            }
+        }).start();
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private List<City> readCitiesData(@Nullable AssetManager assetManager) {
+        if (assetManager == null) {
+            return new ArrayList<>();
+        }
+        String json = null;
+        try {
+            InputStream is = assetManager.open("cities.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, Charset.forName("UTF-8"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LatLng.class, new LatLngDeserializer());
+        Gson gson = gsonBuilder.create();
+        return gson.fromJson(json, new TypeToken<List<City>>() {
+        }.getType());
     }
 
     public void searchCities(String searchQuery) {

@@ -4,14 +4,14 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by Backbase R&D B.V on 28/06/2018.
@@ -20,11 +20,11 @@ import java.lang.ref.WeakReference;
 public class AboutModelImpl implements About.Model {
 
     private static final String TAG = AboutModelImpl.class.getSimpleName();
+    private static final String FILE_NAME = "aboutInfo.json";
     private final About.Presenter presenter;
     private final WeakReference<Context> context;
-    private static final String FILE_NAME = "aboutInfo.json";
 
-    public AboutModelImpl(@NonNull About.Presenter presenter, @NonNull Context context){
+    public AboutModelImpl(@NonNull About.Presenter presenter, @NonNull Context context) {
         this.presenter = presenter;
         this.context = new WeakReference<>(context);
     }
@@ -33,15 +33,15 @@ public class AboutModelImpl implements About.Model {
     public void getAboutInfo() {
         String aboutInfoJson = getAboutInfoFromAssets();
 
-        if(aboutInfoJson != null && !aboutInfoJson.isEmpty()){
-    		AboutInfo aboutInfo = parseAboutInfo(aboutInfoJson);
-    		if (aboutInfo != null){
-        		presenter.onSuccess(aboutInfo);
-        		return;
-   		 	}
-		}
+        if (aboutInfoJson != null && !aboutInfoJson.isEmpty()) {
+            AboutInfo aboutInfo = parseAboutInfo(aboutInfoJson);
+            if (aboutInfo != null) {
+                presenter.onSuccess(aboutInfo);
+                return;
+            }
+        }
 
-		presenter.onFail();
+        presenter.onFail();
     }
 
     private AboutInfo parseAboutInfo(String aboutInfoJson) {
@@ -62,15 +62,15 @@ public class AboutModelImpl implements About.Model {
 
     private String getAboutInfoFromAssets() {
 
-        if(context.get() != null){
-            try{
+        if (context.get() != null) {
+            try {
                 AssetManager manager = context.get().getAssets();
                 InputStream file = manager.open(FILE_NAME);
                 byte[] formArray = new byte[file.available()];
                 file.read(formArray);
                 file.close();
                 return new String(formArray);
-            }catch (IOException ex){
+            } catch (IOException ex) {
                 Log.e(TAG, ex.getLocalizedMessage(), ex);
             }
         }

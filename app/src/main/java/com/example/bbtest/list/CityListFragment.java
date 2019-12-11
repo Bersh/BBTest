@@ -2,18 +2,18 @@ package com.example.bbtest.list;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.bbtest.R;
 import com.example.bbtest.model.City;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +27,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CityListFragment extends Fragment {
 
-    private CityListViewModel mViewModel;
+    private CityListViewModel viewModel;
     private CitiesAdapter adapter;
     private RecyclerView recyclerView;
+    private ProgressBar progress;
 
     public static CityListFragment newInstance() {
         return new CityListFragment();
@@ -41,43 +42,53 @@ public class CityListFragment extends Fragment {
         return inflater.inflate(R.layout.list_fragment, container, false);
     }
 
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        progress = view.findViewById(R.id.progress);
+
+        final EditText search = view.findViewById(R.id.edit_search);
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    viewModel.searchCities(v.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
-    private List<City> readCitiesData() {
-        final Context context = getContext();
-        if (context == null) {
-            return new ArrayList<>();
-        }
-        String json = null;
-        try {
-            InputStream is = getContext().getAssets().open("cities.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, Charset.forName("UTF-8"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        Gson gson = new Gson();
-        return gson.fromJson(json, new TypeToken<List<City>>() {
-        }.getType());
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this, new CityListViewModelProvider(readCitiesData())).get(CityListViewModel.class);
+        final Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        viewModel = ViewModelProviders.of(this, new CityListViewModelProvider(context.getAssets())).get(CityListViewModel.class);
         adapter = new CitiesAdapter(getContext(), new ArrayList<City>());
         recyclerView.setAdapter(adapter);
-        mViewModel.cities.observe(this, new Observer<List<City>>() {
+        viewModel.cities.observe(this, new Observer<List<City>>() {
             @Override
             public void onChanged(List<City> cities) {
                 adapter.setItems(cities);
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        if (viewModel.cities.getValue() != null) {
+            adapter.setItems(viewModel.cities.getValue());
+            adapter.notifyDataSetChanged();
+        }
+
+        viewModel.isLoading.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoading) {
+                progress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                recyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
             }
         });
     }

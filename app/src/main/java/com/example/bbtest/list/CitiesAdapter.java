@@ -34,7 +34,7 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
     @Override
     public void onBindViewHolder(@NonNull CitiesAdapter.CityViewHolder holder, int position) {
         City city = items.get(position);
-        holder.txtTitle.setText(String.format("%s, %s", city.getName(),city.getCountry()));
+        holder.txtTitle.setText(String.format("%s, %s", city.getName(), city.getCountry()));
         holder.txtSubtitle.setText(city.getCoord().toString());
         holder.btnAbout.setOnClickListener(new View.OnClickListener() {
             @Override
