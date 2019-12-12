@@ -42,15 +42,23 @@ public class CityListViewModel extends ViewModel {
             return new ArrayList<>();
         }
         String json = null;
+        InputStream is = null;
         try {
-            InputStream is = assetManager.open("cities.json");
+            is = assetManager.open("cities.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
-            is.close();
             json = new String(buffer, Charset.forName("UTF-8"));
         } catch (IOException ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LatLng.class, new LatLngDeserializer());

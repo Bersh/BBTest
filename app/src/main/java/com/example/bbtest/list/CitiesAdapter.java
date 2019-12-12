@@ -13,15 +13,18 @@ import com.example.bbtest.model.City;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHolder> {
     private Context context;
     private List<City> items;
+    private CityListFragment.CitySelectedCallback callback;
 
-    public CitiesAdapter(Context context, List<City> items) {
+    public CitiesAdapter(@NonNull Context context, @NonNull List<City> items, @Nullable CityListFragment.CitySelectedCallback callback) {
         this.context = context;
         this.items = items;
+        this.callback = callback;
     }
 
     @NonNull
@@ -33,7 +36,15 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CitiesAdapter.CityViewHolder holder, int position) {
-        City city = items.get(position);
+        final City city = items.get(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onCitySelected(city);
+                }
+            }
+        });
         holder.txtTitle.setText(String.format("%s, %s", city.getName(), city.getCountry()));
         holder.txtSubtitle.setText(city.getCoord().toString());
         holder.btnAbout.setOnClickListener(new View.OnClickListener() {
@@ -44,7 +55,7 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
         });
     }
 
-    public void setItems(List<City> items) {
+    void setItems(List<City> items) {
         this.items = items;
     }
 

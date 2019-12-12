@@ -31,6 +31,7 @@ public class CityListFragment extends Fragment {
     private CitiesAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressBar progress;
+    private CitySelectedCallback callback;
 
     public static CityListFragment newInstance() {
         return new CityListFragment();
@@ -60,7 +61,6 @@ public class CityListFragment extends Fragment {
         });
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -69,7 +69,7 @@ public class CityListFragment extends Fragment {
             return;
         }
         viewModel = ViewModelProviders.of(this, new CityListViewModelProvider(context.getAssets())).get(CityListViewModel.class);
-        adapter = new CitiesAdapter(getContext(), new ArrayList<City>());
+        adapter = new CitiesAdapter(getContext(), new ArrayList<City>(), callback);
         recyclerView.setAdapter(adapter);
         viewModel.cities.observe(this, new Observer<List<City>>() {
             @Override
@@ -93,4 +93,17 @@ public class CityListFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof CitySelectedCallback) {
+            callback = (CitySelectedCallback) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement CitySelectedCallback");
+        }
+    }
+
+    public interface CitySelectedCallback {
+        void onCitySelected(City city);
+    }
 }

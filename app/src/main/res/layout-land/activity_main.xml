@@ -4,15 +4,16 @@
     android:layout_height="match_parent"
     android:weightSum="2">
 
-    <fragment
+    <FrameLayout
         android:name="com.example.bbtest.list.CityListFragment"
-        android:id="@+id/list_fragment"
+        android:id="@+id/main_fragment"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent" />
 
     <FrameLayout
-        android:id="@+id/map"
+        android:name="com.example.bbtest.map.MapFragment"
+        android:id="@+id/details_fragment"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent" />
