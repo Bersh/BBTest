@@ -27,6 +27,7 @@ public class DataSearcher {
     }
 
     public List<City> findCities(String query) {
+        query = query.toLowerCase();
         return data.containsKey(query) ? data.get(query) : new ArrayList<City>();
     }
 }
