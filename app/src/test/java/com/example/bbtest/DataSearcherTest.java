@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DataSearcherTest {
     private DataSearcher dataSearcher;
@@ -47,11 +48,14 @@ public class DataSearcherTest {
 
     @Test
     public void emptyStringSearch() {
-        assertEquals(list, dataSearcher.findCities(""));
+        List<City> result = dataSearcher.findCities("");
+        assertTrue(result.containsAll(list));
+        assertEquals(result.size(), list.size());
     }
 
     @Test
     public void invalidCharactersSearch() {
         assertEquals(0, dataSearcher.findCities("@#%$%^&*^&*!*(").size());
+        assertEquals(0, dataSearcher.findCities("аб").size());
     }
 }

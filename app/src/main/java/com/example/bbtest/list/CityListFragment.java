@@ -33,7 +33,7 @@ public class CityListFragment extends Fragment {
     private CitiesAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressBar progress;
-    private CitySelectedCallback callback;
+    private CityItemCallback callback;
     private TextWatcher searchTextWatcher = new TextWatcher() {
 
         @Override
@@ -122,14 +122,14 @@ public class CityListFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof CitySelectedCallback) {
-            callback = (CitySelectedCallback) context;
+        if (context instanceof CityItemCallback) {
+            callback = (CityItemCallback) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement CitySelectedCallback");
+            throw new RuntimeException(context.toString() + " must implement CityItemCallback");
         }
     }
 
-    public interface CitySelectedCallback {
+    public interface CityItemCallback {
         void onCitySelected(City city);
 
         void onAboutSelected(City city);

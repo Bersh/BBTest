@@ -3,7 +3,7 @@ package com.example.bbtest.model;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
-public class City {
+public class City implements Comparable {
     private String country;
     private String name;
     @SerializedName("_id")
@@ -33,7 +33,12 @@ public class City {
         return coord;
     }
 
-    public class Coordinates {
+    public String getCityCountryString() {
+        return String.format("%s, %s", name, country);
+    }
 
+    @Override
+    public int compareTo(Object o) {
+        return this.getCityCountryString().compareTo(((City) o).getCityCountryString());
     }
 }

@@ -13,7 +13,7 @@ import com.example.bbtest.map.MapFragment;
 import com.example.bbtest.model.City;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends AppCompatActivity implements CityListFragment.CitySelectedCallback {
+public class MainActivity extends AppCompatActivity implements CityListFragment.CityItemCallback {
     private static final String MAP_TAG = "MAP";
     private static final String KEY_POINT = "point";
     private static final String KEY_NAME = "name";
@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements CityListFragment.
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
     }
+
+    //TODO fix rotation on map screen
 /*
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);

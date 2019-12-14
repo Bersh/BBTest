@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class DataSearcherImpl implements DataSearcher {
-    private Map<String, List<City>> data = new HashMap<>();
+    private Map<String, Queue<City>> data = new HashMap<>();
 
     public DataSearcherImpl(List<City> cities) {
-        List<City> allList = new ArrayList<>();
+        Queue<City> allList = new PriorityQueue<>();
         data.put("", allList);
         for (City city : cities) {
             allList.add(city);
@@ -19,15 +21,15 @@ public class DataSearcherImpl implements DataSearcher {
             StringBuilder sb = new StringBuilder();
             for (Character c : name.toCharArray()) {
                 sb.append(c);
-                List<City> list = data.containsKey(sb.toString()) ? data.get(sb.toString()) : new ArrayList<City>();
-                list.add(city);
-                data.put(sb.toString(), list);
+                Queue<City> queue = data.containsKey(sb.toString()) ? data.get(sb.toString()) : new PriorityQueue<City>();
+                queue.add(city);
+                data.put(sb.toString(), queue);
             }
         }
     }
 
     public List<City> findCities(String query) {
         query = query.toLowerCase();
-        return data.containsKey(query) ? data.get(query) : new ArrayList<City>();
+        return data.get(query) != null ? new ArrayList<>(data.get(query)) : new ArrayList<City>();
     }
 }

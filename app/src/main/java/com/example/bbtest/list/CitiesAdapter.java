@@ -19,9 +19,9 @@ import java.util.List;
 public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHolder> {
     private Context context;
     private List<City> items;
-    private CityListFragment.CitySelectedCallback callback;
+    private CityListFragment.CityItemCallback callback;
 
-    public CitiesAdapter(@NonNull Context context, @NonNull List<City> items, @Nullable CityListFragment.CitySelectedCallback callback) {
+    public CitiesAdapter(@NonNull Context context, @NonNull List<City> items, @Nullable CityListFragment.CityItemCallback callback) {
         this.context = context;
         this.items = items;
         this.callback = callback;
@@ -45,7 +45,7 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
                 }
             }
         });
-        holder.txtTitle.setText(String.format("%s, %s", city.getName(), city.getCountry()));
+        holder.txtTitle.setText(city.getCityCountryString());
         holder.txtSubtitle.setText(city.getCoord().toString());
         holder.btnAbout.setOnClickListener(new View.OnClickListener() {
             @Override
