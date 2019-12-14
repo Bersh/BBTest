@@ -1,8 +1,10 @@
 package com.example.bbtest;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import com.example.bbtest.about.AboutActivity;
 import com.example.bbtest.list.CityListFragment;
 import com.example.bbtest.map.MapFragment;
 import com.example.bbtest.model.City;
@@ -67,6 +69,11 @@ public class MainActivity extends AppCompatActivity implements CityListFragment.
         }
     }
 
+    @Override
+    public void onAboutSelected(City city) {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
 /*
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);

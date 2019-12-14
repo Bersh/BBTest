@@ -3,9 +3,9 @@ package com.example.bbtest.about;
 import android.content.Context;
 import android.os.Handler;
 
-import java.lang.ref.WeakReference;
-
 import androidx.annotation.NonNull;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by Backbase R&D B.V on 28/06/2018.

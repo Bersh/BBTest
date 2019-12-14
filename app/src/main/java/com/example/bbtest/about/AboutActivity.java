@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.bbtest.R;
-
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.bbtest.R;
 
 
 public class AboutActivity extends AppCompatActivity implements About.View {
