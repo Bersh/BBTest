@@ -131,6 +131,7 @@ public class CityListFragment extends Fragment {
 
     public interface CitySelectedCallback {
         void onCitySelected(City city);
+
         void onAboutSelected(City city);
     }
 }

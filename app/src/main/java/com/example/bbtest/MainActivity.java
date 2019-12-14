@@ -1,19 +1,17 @@
 package com.example.bbtest;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.bbtest.about.AboutActivity;
 import com.example.bbtest.list.CityListFragment;
 import com.example.bbtest.map.MapFragment;
 import com.example.bbtest.model.City;
 import com.google.android.gms.maps.model.LatLng;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity implements CityListFragment.CitySelectedCallback {
     private static final String MAP_TAG = "MAP";
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements CityListFragment.
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(targetPoint != null) {
+        if (targetPoint != null) {
             outState.putParcelable(KEY_POINT, targetPoint);
             outState.putString(KEY_NAME, name);
         }

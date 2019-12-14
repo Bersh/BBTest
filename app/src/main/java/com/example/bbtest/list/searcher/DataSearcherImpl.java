@@ -1,4 +1,4 @@
-package com.example.bbtest.list;
+package com.example.bbtest.list.searcher;
 
 import com.example.bbtest.model.City;
 
@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataSearcher {
+public class DataSearcherImpl implements DataSearcher {
     private Map<String, List<City>> data = new HashMap<>();
 
-    public DataSearcher(List<City> cities) {
+    public DataSearcherImpl(List<City> cities) {
         List<City> allList = new ArrayList<>();
         data.put("", allList);
         for (City city : cities) {

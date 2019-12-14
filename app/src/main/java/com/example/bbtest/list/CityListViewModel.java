@@ -2,7 +2,13 @@ package com.example.bbtest.list;
 
 import android.content.res.AssetManager;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
 import com.example.bbtest.LatLngDeserializer;
+import com.example.bbtest.list.searcher.DataSearcher;
+import com.example.bbtest.list.searcher.DataSearcherImpl;
 import com.example.bbtest.model.City;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -15,10 +21,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.Nullable;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
 public class CityListViewModel extends ViewModel {
     MutableLiveData<List<City>> cities = new MutableLiveData<>();
     MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
@@ -29,7 +31,7 @@ public class CityListViewModel extends ViewModel {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                dataSearcher = new DataSearcher(readCitiesData(assetsManager));
+                dataSearcher = new DataSearcherImpl(readCitiesData(assetsManager));
                 cities.postValue(dataSearcher.findCities(""));
                 isLoading.postValue(false);
             }
