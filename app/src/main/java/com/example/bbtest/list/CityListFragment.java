@@ -2,6 +2,8 @@ package com.example.bbtest.list;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +13,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.bbtest.R;
-import com.example.bbtest.model.City;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,6 +21,12 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bbtest.R;
+import com.example.bbtest.model.City;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class CityListFragment extends Fragment {
 
     private CityListViewModel viewModel;
@@ -32,6 +34,25 @@ public class CityListFragment extends Fragment {
     private RecyclerView recyclerView;
     private ProgressBar progress;
     private CitySelectedCallback callback;
+    private TextWatcher searchTextWatcher = new TextWatcher() {
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start,
+                                      int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start,
+                                  int before, int count) {
+            if (s != null) {
+                searchCities(s.toString());
+            }
+        }
+    };
 
     public static CityListFragment newInstance() {
         return new CityListFragment();
@@ -49,16 +70,21 @@ public class CityListFragment extends Fragment {
         progress = view.findViewById(R.id.progress);
 
         final EditText search = view.findViewById(R.id.edit_search);
+        search.addTextChangedListener(searchTextWatcher);
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    viewModel.searchCities(v.getText().toString());
+                    searchCities(v.getText().toString());
                     return true;
                 }
                 return false;
             }
         });
+    }
+
+    private void searchCities(String query) {
+        viewModel.searchCities(query);
     }
 
     @Override
