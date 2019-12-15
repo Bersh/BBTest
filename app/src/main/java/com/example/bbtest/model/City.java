@@ -39,6 +39,6 @@ public class City implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        return this.getCityCountryString().compareTo(((City) o).getCityCountryString());
+        return getCityCountryString().compareTo(((City) o).getCityCountryString());
     }
 }

@@ -20,22 +20,25 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class CityListViewModel extends ViewModel {
+class CityListViewModel extends ViewModel {
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
     MutableLiveData<List<City>> cities = new MutableLiveData<>();
     MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-    private DataSearcher dataSearcher;
+    private DataSearcher dataSearcher = null;
 
-    public CityListViewModel(@Nullable final AssetManager assetsManager) {
+    CityListViewModel(@Nullable final AssetManager assetsManager) {
         isLoading.setValue(true);
-        new Thread(new Runnable() {
+        executorService.execute(new Runnable() {
             @Override
             public void run() {
                 dataSearcher = new DataSearcherImpl(readCitiesData(assetsManager));
                 cities.postValue(dataSearcher.findCities(""));
                 isLoading.postValue(false);
             }
-        }).start();
+        });
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -69,7 +72,9 @@ public class CityListViewModel extends ViewModel {
         }.getType());
     }
 
-    public void searchCities(String searchQuery) {
-        cities.setValue(dataSearcher.findCities(searchQuery));
+    void searchCities(String searchQuery) {
+        if (dataSearcher != null) {
+            cities.setValue(dataSearcher.findCities(searchQuery));
+        }
     }
 }

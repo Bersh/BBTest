@@ -13,12 +13,12 @@ public class DataSearcherImpl implements DataSearcher {
     private Map<String, Queue<City>> data = new HashMap<>();
 
     public DataSearcherImpl(List<City> cities) {
-        Queue<City> allList = new PriorityQueue<>();
-        data.put("", allList);
+        Queue<City> fullList = new PriorityQueue<>();
+        StringBuilder sb = new StringBuilder();
         for (City city : cities) {
-            allList.add(city);
+            fullList.add(city);
             String name = city.getName().toLowerCase();
-            StringBuilder sb = new StringBuilder();
+            sb.setLength(0);
             for (Character c : name.toCharArray()) {
                 sb.append(c);
                 Queue<City> queue = data.containsKey(sb.toString()) ? data.get(sb.toString()) : new PriorityQueue<City>();
@@ -26,10 +26,12 @@ public class DataSearcherImpl implements DataSearcher {
                 data.put(sb.toString(), queue);
             }
         }
+        data.put("", fullList);
     }
 
     public List<City> findCities(String query) {
         query = query.toLowerCase();
-        return data.get(query) != null ? new ArrayList<>(data.get(query)) : new ArrayList<City>();
+        final Queue<City> result = data.get(query);
+        return result != null ? new ArrayList<>(result) : new ArrayList<City>();
     }
 }
