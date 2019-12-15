@@ -33,6 +33,7 @@ public class CityListFragment extends Fragment {
     private CitiesAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressBar progress;
+    private EditText search;
     private CityItemCallback callback;
     private TextWatcher searchTextWatcher = new TextWatcher() {
 
@@ -69,7 +70,7 @@ public class CityListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         progress = view.findViewById(R.id.progress);
 
-        final EditText search = view.findViewById(R.id.edit_search);
+        search = view.findViewById(R.id.edit_search);
         search.addTextChangedListener(searchTextWatcher);
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -115,6 +116,7 @@ public class CityListFragment extends Fragment {
             public void onChanged(Boolean isLoading) {
                 progress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 recyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+                search.setVisibility(isLoading ? View.GONE : View.VISIBLE);
             }
         });
     }

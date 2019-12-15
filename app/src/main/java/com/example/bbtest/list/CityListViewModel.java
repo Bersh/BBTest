@@ -2,6 +2,7 @@ package com.example.bbtest.list;
 
 import android.content.res.AssetManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -24,7 +25,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class CityListViewModel extends ViewModel {
+    @NonNull
     MutableLiveData<List<City>> cities = new MutableLiveData<>();
+    @NonNull
     MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private ExecutorService executorService = Executors.newCachedThreadPool();
     private DataSearcher dataSearcher = null;
@@ -73,7 +76,7 @@ class CityListViewModel extends ViewModel {
     }
 
     void searchCities(String searchQuery) {
-        if (dataSearcher != null) {
+        if (dataSearcher != null && !isLoading.getValue()) {
             cities.setValue(dataSearcher.findCities(searchQuery));
         }
     }
