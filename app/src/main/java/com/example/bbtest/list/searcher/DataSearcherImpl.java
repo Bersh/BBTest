@@ -1,5 +1,7 @@
 package com.example.bbtest.list.searcher;
 
+import androidx.annotation.WorkerThread;
+
 import com.example.bbtest.model.City;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Queue;
 public class DataSearcherImpl implements DataSearcher {
     private Map<String, Queue<City>> data = new HashMap<>();
 
+    @WorkerThread
     public DataSearcherImpl(List<City> cities) {
         Queue<City> fullList = new PriorityQueue<>();
         StringBuilder sb = new StringBuilder();

@@ -24,9 +24,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class CityListViewModel extends ViewModel {
-    private final ExecutorService executorService = Executors.newCachedThreadPool();
     MutableLiveData<List<City>> cities = new MutableLiveData<>();
     MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private ExecutorService executorService = Executors.newCachedThreadPool();
     private DataSearcher dataSearcher = null;
 
     CityListViewModel(@Nullable final AssetManager assetsManager) {
@@ -76,5 +76,10 @@ class CityListViewModel extends ViewModel {
         if (dataSearcher != null) {
             cities.setValue(dataSearcher.findCities(searchQuery));
         }
+    }
+
+    protected void onCleared() {
+        executorService.shutdownNow();
+        executorService = null;
     }
 }

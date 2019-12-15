@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.bbtest.about.AboutActivity;
@@ -15,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends AppCompatActivity implements CityListFragment.CityItemCallback {
     private static final String MAP_TAG = "MAP";
+    private static final String LIST_TAG = "LIST";
     private static final String KEY_POINT = "point";
     private static final String KEY_NAME = "name";
 
@@ -23,32 +26,38 @@ public class MainActivity extends AppCompatActivity implements CityListFragment.
     private LatLng targetPoint = null;
     private String name = "";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction trans = fm.beginTransaction();
         isLandscapeMode = findViewById(R.id.details_fragment) != null;
 
-        if (getSupportFragmentManager().findFragmentByTag(MAP_TAG) != null) {
-            mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MAP_TAG);
-            trans.detach(mapFragment);
-            trans.replace(R.id.main_fragment, CityListFragment.newInstance());
+        final Fragment oldMap = fm.findFragmentByTag(MAP_TAG);
+        if (oldMap != null && isLandscapeMode) {
+            //map has already been added in portrait mode
+            trans.remove(oldMap);
+            fm.popBackStack();
         } else if (savedInstanceState == null) {
-            trans.replace(R.id.main_fragment, CityListFragment.newInstance());
+            //app is just started
+            trans.replace(R.id.main_fragment, CityListFragment.newInstance(), LIST_TAG);
         }
 
-        if (isLandscapeMode && getSupportFragmentManager().findFragmentById(R.id.details_fragment) == null) {
+        if (isLandscapeMode) {
             mapFragment = MapFragment.newInstance();
             trans.replace(R.id.details_fragment, mapFragment);
-            if (savedInstanceState != null && savedInstanceState.containsKey(KEY_POINT)) {
-                mapFragment.goToPoint((LatLng) savedInstanceState.getParcelable(KEY_POINT), savedInstanceState.getString(KEY_NAME, ""));
-            }
         }
 
         trans.commit();
+    }
+
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (targetPoint != null && !isLandscapeMode) {
+            targetPoint = null;
+        }
     }
 
     @Override
@@ -73,16 +82,17 @@ public class MainActivity extends AppCompatActivity implements CityListFragment.
         startActivity(intent);
     }
 
-    //TODO fix rotation on map screen
-/*
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if(!isLandscapeMode && mapFragment != null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.detach(mapFragment).commit();
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState == null) {
+            return;
+        }
+        final LatLng savedPoint = savedInstanceState.getParcelable(KEY_POINT);
+        if (savedPoint != null && mapFragment != null) {
+            mapFragment.goToPoint(savedPoint, savedInstanceState.getString(KEY_NAME, ""));
         }
     }
-*/
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
