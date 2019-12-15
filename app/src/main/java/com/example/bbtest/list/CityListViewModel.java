@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.bbtest.LatLngDeserializer;
+import com.example.bbtest.util.LatLngDeserializer;
 import com.example.bbtest.list.searcher.DataSearcher;
 import com.example.bbtest.list.searcher.DataSearcherImpl;
 import com.example.bbtest.model.City;

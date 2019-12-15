@@ -1,4 +1,4 @@
-package com.example.bbtest;
+package com.example.bbtest.util;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonDeserializationContext;
