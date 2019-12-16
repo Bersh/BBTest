@@ -6,3 +6,6 @@ The application uses Gradle build system. To create a debug build run the follow
 
 You can see all available build options by calling:
 `./gradlew tasks`  
+
+## Google map api key
+You will need to provide your own Google Maps API key as `google.map.key` in `local.properties`
